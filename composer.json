@@ -30,5 +30,12 @@
       "ThePaulus\\Shibboleth\\": "src/the-paulus/Shibboleth"
     }
   },
-  "minimum-stability": "stable"
+  "minimum-stability": "stable",
+  "extra": {
+    "laravel": {
+      "providers": [
+        "ThePaulus\\Shibboleth\\Providers\\ShibbolethServiceProvider"
+      ]
+    }
+  },  
 }
