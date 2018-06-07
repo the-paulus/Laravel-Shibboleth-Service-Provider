@@ -1,4 +1,4 @@
-<?php namespace StudentAffairsUwm\Shibboleth;
+<?php namespace ThePaulus\Shibboleth;
 
 use Illuminate\Support\ServiceProvider;
 
