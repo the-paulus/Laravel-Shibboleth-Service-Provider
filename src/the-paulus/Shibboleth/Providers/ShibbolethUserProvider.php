@@ -1,10 +1,10 @@
 <?php namespace ThePaulus\Shibboleth\Providers;
 
 use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Contracts\Auth\UserProvider as UserProviderInterface;
+use Illuminate\Contracts\Auth\UserProvider;
 use Hash;
 
-class ShibbolethUserProvider implements UserProviderInterface
+class ShibbolethUserProvider implements UserProvider
 {
     /**
      * The user model.
