@@ -11,6 +11,14 @@ class ShibbolethServiceProvider extends ServiceProvider
      */
     protected $defer = false;
 
+    public function boot() {
+
+        $this->registerPolcies();
+
+        Auth::provider('shibboleth', function($app, array $config) {
+          return new ShibbolethServiceProvider($app->make('shibboleth.connection'));
+        });
+    }
     /**
      * Register the service provider.
      *
