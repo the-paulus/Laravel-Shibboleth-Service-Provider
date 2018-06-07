@@ -49,7 +49,7 @@ class ShibbolethUserProvider implements UserProvider
             return null;
         }
 
-        $class = '\\' . ltrim($this->model, '\\');
+        $class = get_class($this->model);
         $user  = new $class;
 
         $query = $user->newQuery();
