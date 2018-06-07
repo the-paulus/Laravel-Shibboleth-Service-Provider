@@ -1,5 +1,5 @@
 <?php
-Route::group(['middleware' => 'web,api'], function() {
+Route::group(['middleware' => 'web'], function() {
   // Login Route (Shibboleth)
   Route::get('/login', 'ThePaulus\Shibboleth\Controllers\ShibbolethController@create');
   // Logout Route (Shibboleth and Local)
