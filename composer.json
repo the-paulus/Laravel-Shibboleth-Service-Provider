@@ -37,5 +37,8 @@
         "ThePaulus\\Shibboleth\\Providers\\ShibbolethServiceProvider"
       ]
     }
-  },  
+  },
+  "require-dev": {
+    "orchestra/testbench": "^3.5"
+  }  
 }
