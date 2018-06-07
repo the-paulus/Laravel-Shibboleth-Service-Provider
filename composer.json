@@ -1,30 +1,34 @@
 {
-    "name": "studentaffairsuwm/shibboleth",
-    "description": "Enable basic Shibboleth support for Laravel 5.x",
-    "version": "1.1.1",
-    "authors": [
-        {
-            "name": "Christopher Maio",
-            "email": "cjmaio@uwm.edu"
-        },
-        {
-            "name": "Michael Schuett",
-            "email": "michaeljs1990@gmail.com"
-        },
-        {
-            "name": "Taylor Donald Harvey Smith",
-            "email": "smit2482@uwm.edu"
-        }
-    ],
-    "require": {
-        "php": ">=5.4.0",
-        "illuminate/support": "5.*",
-        "mrclay/shibalike": "1.0.0"
+  "name": "the-paulus/laravel-shibboleth",
+  "description": "Enable basic Shibboleth support for Laravel 5.5+. (Forked from StudentAffairsUWM/Laravel-Shibboleth-Service-Provider)",
+  "version": "1.0.0",
+  "authors": [
+    {
+      "name": "Paul Lyon",
+      "email": "lyonp@uwm.edu"
     },
-    "autoload": {
-        "psr-4": {
-            "StudentAffairsUwm\\Shibboleth\\": "src/StudentAffairsUwm/Shibboleth"
-        }
+    {
+      "name": "Christopher Maio",
+      "email": "cjmaio@uwm.edu"
     },
-    "minimum-stability": "stable"
+    {
+      "name": "Michael Schuett",
+      "email": "michaeljs1990@gmail.com"
+    },
+    {
+      "name": "Taylor Donald Harvey Smith",
+      "email": "smit2482@uwm.edu"
+    }
+  ],
+  "require": {
+    "php": ">=5.4.0",
+    "illuminate/support": "5.*",
+    "mrclay/shibalike": "1.0.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "ThePaulus\\Shibboleth\\": "src/the-paulus/Shibboleth"
+    }
+  },
+  "minimum-stability": "stable"
 }
