@@ -19,16 +19,16 @@ class ShibbolethServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app['auth']->extend('shibboleth', function ($app) {
-            return new Providers\ShibbolethUserProvider($this->app['config']['auth.model']);
+            return new Providers\ShibbolethUserProvider($this->app['config']['auth.providers.users.model']);
         });
 
         // Publish the configuration, migrations, and User / Group models
         $this->publishes([
-            __DIR__ . '/../../config/shibboleth.php' => config_path('shibboleth.php'),
-            __DIR__ . '/../../database/migrations/'  => base_path('/database/migrations'),
-            __DIR__ . '/../../resources/views/'  => base_path('/resources/views'),
-            __DIR__ . '/User.php'                    => base_path('/app/User.php'),
-            __DIR__ . '/Group.php'                   => base_path('/app/Group.php'),
+            __DIR__ . '/../../config/shibboleth.php'  => config_path('shibboleth.php'),
+            __DIR__ . '/../../database/migrations/'   => base_path('/database/migrations'),
+            __DIR__ . '/../../resources/views/'       => base_path('/resources/views'),
+            __DIR__ . '/User.php'                     => base_path('/app/User.php'),
+            __DIR__ . '/Group.php'                    => base_path('/app/Group.php'),
         ]);
 
         include __DIR__ . '/../../routes.php';
