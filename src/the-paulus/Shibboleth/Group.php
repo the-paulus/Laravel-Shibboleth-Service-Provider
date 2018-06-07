@@ -17,7 +17,7 @@ class Group extends Model
      *
      * @var string
      */
-    protected $table = 'groups';
+    protected $table = 'user_groups';
 
     /**
      * Determine the need for created_at and updated_at timestamps.
@@ -56,7 +56,7 @@ class Group extends Model
      */
     public function users()
     {
-        return $this->belongsToMany('App\User');
+        return $this->belongsToMany('App\Models\User');
     }
 
 }
