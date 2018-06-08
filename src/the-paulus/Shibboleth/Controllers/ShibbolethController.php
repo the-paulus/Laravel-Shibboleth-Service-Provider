@@ -234,7 +234,6 @@ class ShibbolethController extends Controller
     {
         $token = JWTAuth::parseToken();
 
-        $user = JWTAuth::toUser($token);
         $payload = $token->getPayload();
 
         Auth::logout();
@@ -242,13 +241,21 @@ class ShibbolethController extends Controller
         $token->invalidate();
 
         if ($payload->get('auth_type') == 'idp') {
+
             if (config('shibboleth.emulate_idp') == true) {
+
                 return Redirect::to(action('\\' . __CLASS__ . '@emulateLogout'));
+
             } else {
+
                 return Redirect::to('https://' . Request::server('SERVER_NAME') . config('shibboleth.idp_logout'));
+
             }
+
         } else {
+
             return $this->viewOrRedirect(config('shibboleth.local_logout'));
+
         }
     }
 
