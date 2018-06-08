@@ -2,6 +2,7 @@
 namespace ThePaulus\Shibboleth\Controllers;
 
 use Illuminate\Auth\GenericUser;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
@@ -60,10 +61,27 @@ class ShibbolethController extends Controller
     public function create()
     {
         if (config('shibboleth.emulate_idp') == true) {
-            return Redirect::to(action('\\' . __CLASS__ . '@emulateLogin') . '?target=' . action('\\' . __CLASS__ . "@idpAuthorize"));
+
+            return Redirect::to(action(__CLASS__ . '@emulateLogin')
+                . '?target=' . action('\\' . __CLASS__ . "@idpAuthorize"));
+
         } else {
-            return Redirect::to('https://' . Request::server('SERVER_NAME') . ':' . Request::server('SERVER_PORT') . config('shibboleth.idp_login') . '?target=' . action('\\' . __CLASS__ . '@idpAuthorize'));
+
+            return Redirect::to('https://' . Request::server('SERVER_NAME')
+                . ':' . Request::server('SERVER_PORT')
+                . config('shibboleth.idp_login')
+                . '?target=' . action('\\' . __CLASS__ . '@idpAuthorize'));
+
         }
+    }
+
+    /**
+     * Alias for create()
+     */
+    public function login() {
+
+        $this->create();
+
     }
 
     /**
@@ -72,6 +90,15 @@ class ShibbolethController extends Controller
     public function localCreate()
     {
         return $this->viewOrRedirect(config('shibboleth.local_login'));
+    }
+
+    /**
+     * Alias for localCreate()
+     */
+    public function localLogin() {
+
+        $this->localCreate();
+
     }
 
     /**
@@ -142,30 +169,52 @@ class ShibbolethController extends Controller
         } else {
             //Add user to group and send through auth.
             if (isset($email)) {
+
                 if (config('shibboleth.add_new_users', true)) {
-                    $user = $userClass::create(array(
-                        'email'      => $email,
-                        'type'       => 'shibboleth',
-                        'first_name' => $first_name,
-                        'last_name'  => $last_name,
-                        'enabled'    => 0,
-                    ));
 
                     try {
-                        $group = $groupClass::findOrFail(config('shibboleth.shibboleth_group'));
-                    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-                        $msg = "Could not find " . $groupClass . " with primary key " . config('shibboleth.shibboleth_group') . "! Check your Laravel-Shibboleth configuration.";
-                        throw new \RuntimeException($msg, 900, $e);
-                    }
 
-                    $group->users()->save($user);
+                        $user = $userClass::create(array(
+                            'email'      => $email,
+                            'type'       => 'shibboleth',
+                            'first_name' => $first_name,
+                            'last_name'  => $last_name,
+                            'enabled'    => 0,
+                        ));
+
+                        $group = $groupClass::findOrFail(config('shibboleth.shibboleth_group'));
+
+                        $group->users()->save($user);
+
+                    } catch (ModelNotFoundException $modelNotFoundException) {
+
+                        throw new \RuntimeException("Could not find " . $groupClass
+                            . " with primary key " . config('shibboleth.shibboleth_group')
+                            . "! Check your Laravel-Shibboleth configuration.",
+                            900,
+                            $modelNotFoundException);
+
+                    } catch(\PDOException $PDOException) {
+
+                        throw new \RuntimeException($PDOException->getMessage(),
+                            $PDOException->getCode());
+
+                    }
 
                     // this is simply brings us back to the session-setting branch directly above
                     if (config('shibboleth.emulate_idp') == true) {
-                        return Redirect::to(action('\\' . __CLASS__ . '@emulateLogin') . '?target=' . action('\\' . __CLASS__ . '@idpAuthorize'));
+
+                        return Redirect::to(action('\\' . __CLASS__ . '@emulateLogin')
+                            . '?target=' . action('\\' . __CLASS__ . '@idpAuthorize'));
+
                     } else {
-                        return Redirect::to('https://' . Request::server('SERVER_NAME') . ':' . Request::server('SERVER_PORT') . config('shibboleth.idp_login') . '?target=' . action('\\' . __CLASS__ . '@idpAuthorize'));
+
+                        return Redirect::to('https://' . Request::server('SERVER_NAME')
+                            . ':' . Request::server('SERVER_PORT') . config('shibboleth.idp_login')
+                            . '?target=' . action('\\' . __CLASS__ . '@idpAuthorize'));
+
                     }
+
                 } else {
                     // TODO: This is old... it will just cause redirect loops.
                     // Identify that the user was not in our database and will not be created (despite passing IdP)
