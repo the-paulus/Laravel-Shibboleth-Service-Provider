@@ -150,7 +150,7 @@ class ShibbolethController extends Controller
         if (Auth::attempt(array('email' => $email, 'type' => 'shibboleth'), true)) {
             $user = $userClass::where('email', '=', $email)->first();
 
-            // Update the modal as necessary
+            // Update the model as necessary
             if (isset($first_name)) {
                 $user->first_name = $first_name;
             }
