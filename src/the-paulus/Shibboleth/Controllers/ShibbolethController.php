@@ -359,4 +359,26 @@ class ShibbolethController extends Controller
     {
         return (View::exists($view)) ? view($view) : Redirect::to($view);
     }
+
+    /**
+     * Appends a user's token to the provided URL.
+     *
+     * @param string    $url    URL to append the token parameter to.
+     * @param User      $user   Owner of the token to be appended.
+     * @param array     $claims Additional claims for the token.
+     *
+     * @return string   URL with a token parameter.
+     */
+    private function tokenizeDestination(string $url, $user, $claims) {
+
+        $token = '';
+
+        if(env('JWTAUTH')) {
+
+            $token = '?token=' . JWTAuth::fromUser($user, $claims);
+        }
+
+        return $url . $token;
+
+    }
 }
