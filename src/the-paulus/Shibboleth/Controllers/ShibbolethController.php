@@ -1,5 +1,5 @@
 <?php
-namespace StudentAffairsUwm\Shibboleth\Controllers;
+namespace ThePaulus\Shibboleth\Controllers;
 
 use Illuminate\Auth\GenericUser;
 use Illuminate\Routing\Controller;
