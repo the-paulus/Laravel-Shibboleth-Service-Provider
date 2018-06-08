@@ -23,11 +23,22 @@
   "require": {
     "php": ">=7.0.0",
     "illuminate/support": "5.*",
-    "mrclay/shibalike": "1.0.0"
+    "mrclay/shibalike": "1.0.0",
+    "tymon/jwt-auth": "1.0.0-rc.2"
+  },
+  "require-dev": {
+    "orchestra/testbench": "^3.5",
+    "orchestra/database": "^3.5"
   },
   "autoload": {
     "psr-4": {
       "ThePaulus\\Shibboleth\\": "src/the-paulus/Shibboleth"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "ThePaulus\\Shibboleth\\": "src/the-paulus/Shibboleth",
+      "App\\Models\\": "src/the-paulus/Shibboleth/Models"
     }
   },
   "minimum-stability": "stable",
@@ -37,8 +48,5 @@
         "ThePaulus\\Shibboleth\\Providers\\ShibbolethServiceProvider"
       ]
     }
-  },
-  "require-dev": {
-    "orchestra/testbench": "^3.5"
-  }  
+  }
 }
