@@ -1,6 +1,7 @@
 <?php
 namespace ThePaulus\Shibboleth\Controllers;
 
+use App\Models\User;
 use Illuminate\Auth\GenericUser;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Routing\Controller;
@@ -108,23 +109,26 @@ class ShibbolethController extends Controller
     {
         $email    = Input::get(config('shibboleth.local_login_user_field'));
         $password = Input::get(config('shibboleth.local_login_pass_field'));
-
         $userClass  = config('auth.providers.users.model');
         $groupClass = config('auth.providers.users.group_model');
 
         if (Auth::attempt(array('email' => $email, 'password' => $password, 'type' => 'local'), true)) {
+
             $user = $userClass::where('email', '=', $email)->first();
 
-            // This is where we used to setup a session. Now we will setup a token.
-            $customClaims = ['auth_type' => 'local'];
-            $token        = JWTAuth::fromUser($user, $customClaims);
+            return $this->viewOrRedirect(
+                $this->tokenizeDestination(
+                    config('shibboleth.local_authenticated'),
+                    $user,
+                    ['auth_type' => 'local']
+                ));
 
-            // We need to pass the token... how?
-            // Let's try this.
-            return $this->viewOrRedirect(config('shibboleth.local_authenticated') . '?token=' . $token);
         } else {
+
             Session::flash('message', 'Invalid email or password.');
+
             return $this->viewOrRedirect(config('shibboleth.local_login'));
+
         }
     }
 
@@ -137,7 +141,6 @@ class ShibbolethController extends Controller
         $email      = $this->getServerVariable(config('shibboleth.idp_login_email'));
         $first_name = $this->getServerVariable(config('shibboleth.idp_login_first'));
         $last_name  = $this->getServerVariable(config('shibboleth.idp_login_last'));
-
         $userClass  = config('auth.providers.users.model');
         $groupClass = config('auth.providers.users.group_model');
 
@@ -158,13 +161,14 @@ class ShibbolethController extends Controller
 
             $user->save();
 
-            // This is where we used to setup a session. Now we will setup a token.
-            $customClaims = ['auth_type' => 'idp'];
-            $token        = JWTAuth::fromUser($user, $customClaims);
-
             // We need to pass the token... how?
             // Let's try this.
-            return $this->viewOrRedirect(config('shibboleth.shibboleth_authenticated') . '?token=' . $token);
+            return $this->viewOrRedirect(
+                $this->tokenizeDestination(
+                    config('shibboleth.shibboleth_authenticated'),
+                    $user,
+                    ['auth_type' => 'idp']
+                ));
 
         } else {
             //Add user to group and send through auth.
@@ -232,19 +236,23 @@ class ShibbolethController extends Controller
      */
     public function destroy()
     {
-        $token = JWTAuth::parseToken();
 
-        $payload = $token->getPayload();
+        $auth_type = Auth::user()->auth_type;
 
         Auth::logout();
         Session::flush();
-        $token->invalidate();
 
-        if ($payload->get('auth_type') == 'idp') {
+        if(env('JWTAUTH')) {
+
+            JWTAuth::parseToken()->invalidate();
+
+        }
+
+        if($auth_type == 'idp') {
 
             if (config('shibboleth.emulate_idp') == true) {
 
-                return Redirect::to(action('\\' . __CLASS__ . '@emulateLogout'));
+                return Redirect::to(action(__CLASS__ . '@emulateLogout'));
 
             } else {
 
@@ -276,7 +284,9 @@ class ShibbolethController extends Controller
     public function emulateLogout()
     {
         $this->sp->logout();
-        die('Goodbye, fair user. <a href="' . $this->getServerVariable('HTTP_REFERER') . '">Return from whence you came</a>!');
+
+        Redirect::to(env('URL', $this->getServerVariable('HTTP_REFERER')));
+
     }
 
     /**
