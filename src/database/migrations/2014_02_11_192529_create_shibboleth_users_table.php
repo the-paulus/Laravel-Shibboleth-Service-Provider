@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreateShibbolethUsersTable extends Migration
 {
@@ -21,11 +22,11 @@ class CreateShibbolethUsersTable extends Migration
                 $table->string('name');
                 $table->softDeletes();
 
-                DB::table('user_groups')->insert(array(
+                DB::table('auth_types')->insert(array(
                     'name' => 'local',
                 ));
 
-                DB::table('user_groups')->insert(array(
+                DB::table('auth_types')->insert(array(
                     'name' => 'shibboleth',
                 ));
 
@@ -35,7 +36,8 @@ class CreateShibbolethUsersTable extends Migration
 
         if (!Schema::hasTable('users')) {
 
-            Schema::create('users', function ($table) {
+            Schema::create('users', function (Blueprint $table) {
+
                 $table->increments('id');
                 $table->string('first_name');
                 $table->string('last_name');
