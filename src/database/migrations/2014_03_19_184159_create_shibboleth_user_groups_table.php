@@ -14,16 +14,16 @@ class CreateShibbolethUserGroupsTable extends Migration
     public function up()
     {
         if(!Schema::hasTable('user_groups')) {
+
           Schema::create('user_groups', function (Blueprint $table) {
+
               $table->increments('id');
               $table->string('name', 30)->unique();
               $table->text('description');
               $table->timestamps();
+
           });
 
-          DB::table('user_groups')->insert(array(
-              'name' => 'default',
-          ));
         } else {
 
         }
