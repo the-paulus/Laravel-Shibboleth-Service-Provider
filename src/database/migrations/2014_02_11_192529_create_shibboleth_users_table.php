@@ -22,16 +22,15 @@ class CreateShibbolethUsersTable extends Migration
                 $table->string('name');
                 $table->softDeletes();
 
-                DB::table('auth_types')->insert(array(
-                    'name' => 'local',
-                ));
-
-                DB::table('auth_types')->insert(array(
-                    'name' => 'shibboleth',
-                ));
-
             });
 
+            DB::table('auth_types')->insert(array(
+                'name' => 'local',
+            ));
+
+            DB::table('auth_types')->insert(array(
+                'name' => 'shibboleth',
+            ));
         }
 
         if (!Schema::hasTable('users')) {
