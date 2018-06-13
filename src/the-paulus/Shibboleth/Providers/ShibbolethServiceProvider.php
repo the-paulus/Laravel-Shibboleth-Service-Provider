@@ -30,8 +30,8 @@ class ShibbolethServiceProvider extends ServiceProvider
                 file_exists(app_path('Models') . DIRECTORY_SEPARATOR . 'Group.php')
             ) {
 
-                $publishes[__DIR__ . '/../../Models/User.php'] = app_path('Models') . DIRECTORY_SEPARATOR . 'User.php';
-                $publishes[__DIR__ . '/../../Models/Group.php'] = app_path('Models') . DIRECTORY_SEPARATOR . 'Group.php';
+                $publishes[__DIR__ . '/../Models/User.php'] = app_path('Models') . DIRECTORY_SEPARATOR . 'User.php';
+                $publishes[__DIR__ . '/../Models/Group.php'] = app_path('Models') . DIRECTORY_SEPARATOR . 'Group.php';
 
             }
 
@@ -42,8 +42,8 @@ class ShibbolethServiceProvider extends ServiceProvider
                 file_exists(app_path() . DIRECTORY_SEPARATOR . 'Group.php')
             ) {
 
-                $publishes[__DIR__ . '/../../Models/User.php'] = app_path() . DIRECTORY_SEPARATOR . 'User.php';
-                $publishes[__DIR__ . '/../../Models/Group.php'] = app_path() . DIRECTORY_SEPARATOR . 'Group.php';
+                $publishes[__DIR__ . '/../Models/User.php'] = app_path() . DIRECTORY_SEPARATOR . 'User.php';
+                $publishes[__DIR__ . '/../Models/Group.php'] = app_path() . DIRECTORY_SEPARATOR . 'Group.php';
 
             }
         }
