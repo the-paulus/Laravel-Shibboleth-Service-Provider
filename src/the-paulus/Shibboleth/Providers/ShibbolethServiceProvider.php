@@ -19,12 +19,38 @@ class ShibbolethServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__ . '/../../../database/migrations');
         $this->loadViewsFrom(__DIR__ . '/../../../resources/views', 'laravel-shibboleth');
 
-        $this->publishes([
-          __DIR__ . '/../../config/shibboleth.php'  => config_path('shibboleth.php'),
-          __DIR__ . '/../../Models/User.php'        => base_path('/app/Models/User.php'),
-          __DIR__ . '/../../Models/Group.php'       => base_path('/app/Models/Group.php'),
-          __DIR__ . '/../../../resources/views'     => resource_path('views/vendor/courier'),
-        ]);
+        $publishes = [
+            __DIR__ . '/../../../config/shibboleth.php'     => config_path('shibboleth.php'),
+        ];
+
+        if(file_exists(app_path('Models'))) {
+
+            if(
+                file_exists(app_path('Models') . DIRECTORY_SEPARATOR . 'User.php') ||
+                file_exists(app_path('Models') . DIRECTORY_SEPARATOR . 'Group.php')
+            ) {
+
+                $publishes[__DIR__ . '/../../Models/User.php'] = app_path('Models') . DIRECTORY_SEPARATOR . 'User.php';
+                $publishes[__DIR__ . '/../../Models/Group.php'] = app_path('Models') . DIRECTORY_SEPARATOR . 'Group.php';
+
+            }
+
+        } else {
+
+            if(
+                file_exists(app_path() . DIRECTORY_SEPARATOR . 'User.php') ||
+                file_exists(app_path() . DIRECTORY_SEPARATOR . 'Group.php')
+            ) {
+
+                $publishes[__DIR__ . '/../../Models/User.php'] = app_path() . DIRECTORY_SEPARATOR . 'User.php';
+                $publishes[__DIR__ . '/../../Models/Group.php'] = app_path() . DIRECTORY_SEPARATOR . 'Group.php';
+
+            }
+        }
+
+
+
+        $this->publishes($publishes);
 
         //$this->registerPolicies();
 
