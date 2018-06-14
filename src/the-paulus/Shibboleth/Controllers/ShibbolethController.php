@@ -61,7 +61,7 @@ class ShibbolethController extends Controller
      */
     public function create()
     {
-        if (config('shibboleth.emulate_idp') === true) {
+        if (env('EMULATE_SHIBBOLETH', config('shibboleth.emulate_idp')) === TRUE) {
 
             return Redirect::to(action('\\' . __CLASS__ . '@emulateLogin')
                 . '?target=' . action('\\' . __CLASS__ . "@idpAuthorize"));
