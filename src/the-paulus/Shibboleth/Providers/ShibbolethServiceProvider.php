@@ -28,8 +28,8 @@ class ShibbolethServiceProvider extends ServiceProvider
         if(file_exists(app_path('Models'))) {
 
             if(
-                file_exists(app_path('Models') . DIRECTORY_SEPARATOR . 'User.php') ||
-                file_exists(app_path('Models') . DIRECTORY_SEPARATOR . 'UserGroup.php')
+                !file_exists(app_path('Models') . DIRECTORY_SEPARATOR . 'User.php') &&
+                !file_exists(app_path('Models') . DIRECTORY_SEPARATOR . 'UserGroup.php')
             ) {
 
                 $publishes[__DIR__ . '/../Models/User.php'] = app_path('Models') . DIRECTORY_SEPARATOR . 'User.php';
@@ -40,8 +40,8 @@ class ShibbolethServiceProvider extends ServiceProvider
         } else {
 
             if(
-                file_exists(app_path() . DIRECTORY_SEPARATOR . 'User.php') ||
-                file_exists(app_path() . DIRECTORY_SEPARATOR . 'UserGroup.php')
+                !file_exists(app_path() . DIRECTORY_SEPARATOR . 'User.php') &&
+                !file_exists(app_path() . DIRECTORY_SEPARATOR . 'UserGroup.php')
             ) {
 
                 $publishes[__DIR__ . '/../Models/User.php'] = app_path() . DIRECTORY_SEPARATOR . 'User.php';
@@ -49,8 +49,6 @@ class ShibbolethServiceProvider extends ServiceProvider
 
             }
         }
-
-
 
         $this->publishes($publishes);
 
