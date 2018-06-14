@@ -33,7 +33,7 @@ class ShibbolethServiceProvider extends ServiceProvider
             ) {
 
                 $publishes[__DIR__ . '/../Models/User.php'] = app_path('Models') . DIRECTORY_SEPARATOR . 'User.php';
-                $publishes[__DIR__ . '/../Models/Group.php'] = app_path('Models') . DIRECTORY_SEPARATOR . 'UserGroup.php';
+                $publishes[__DIR__ . '/../Models/UserGroup.php'] = app_path('Models') . DIRECTORY_SEPARATOR . 'UserGroup.php';
 
             }
 
@@ -45,7 +45,7 @@ class ShibbolethServiceProvider extends ServiceProvider
             ) {
 
                 $publishes[__DIR__ . '/../Models/User.php'] = app_path() . DIRECTORY_SEPARATOR . 'User.php';
-                $publishes[__DIR__ . '/../Models/Group.php'] = app_path() . DIRECTORY_SEPARATOR . 'UserGroup.php';
+                $publishes[__DIR__ . '/../Models/UserGroup.php'] = app_path() . DIRECTORY_SEPARATOR . 'UserGroup.php';
 
             }
         }
