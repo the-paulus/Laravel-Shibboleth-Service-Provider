@@ -110,7 +110,7 @@ class ShibbolethController extends Controller
         $email    = Input::get(config('shibboleth.local_login_user_field'));
         $password = Input::get(config('shibboleth.local_login_pass_field'));
         $userClass  = config('auth.providers.users.model', 'App\\User');
-        $groupClass = config('auth.providers.users.group_model', 'App\\Group');
+        $groupClass = config('auth.providers.groups.model', 'App\\Group');
 
         if (Auth::attempt(array('email' => $email, 'password' => $password, 'auth_type' => 'local'), true)) {
 
@@ -142,7 +142,7 @@ class ShibbolethController extends Controller
         $first_name = $this->getServerVariable(config('shibboleth.idp_login_first'));
         $last_name  = $this->getServerVariable(config('shibboleth.idp_login_last'));
         $userClass  = config('auth.providers.users.model', 'App\\User');
-        $groupClass = config('auth.providers.users.group_model', 'App\\Group');
+        $groupClass = config('auth.providers.groups.model', 'App\\Group');
 
         // Attempt to login with the email, if success, update the user model
         // with data from the Shibboleth headers (if present)
@@ -185,14 +185,14 @@ class ShibbolethController extends Controller
                             'last_name'  => $last_name
                         ));
 
-                        $group = $groupClass::findOrFail(config('auth.providers.groups.model'));
+                        $group = $groupClass::findOrFail(config('shibboleth.shibboleth_group'));
 
                         $group->users()->save($user);
 
                     } catch (ModelNotFoundException $modelNotFoundException) {
 
                         throw new \RuntimeException("Could not find " . $groupClass
-                            . " with primary key " . config('auth.providers.groups.model')
+                            . " with primary key " . config('shibboleth.shibboleth_group')
                             . "! Check your Laravel-Shibboleth configuration.",
                             900,
                             $modelNotFoundException);
