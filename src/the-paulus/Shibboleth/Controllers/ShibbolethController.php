@@ -178,22 +178,21 @@ class ShibbolethController extends Controller
 
                     try {
 
-                        $user = $userClass::create(array(
+                        $user = $userClass::firstOrNew(array(
                             'email'      => $email,
                             'auth_type'  => 'shibboleth',
                             'first_name' => $first_name,
-                            'last_name'  => $last_name,
-                            'enabled'    => 0,
+                            'last_name'  => $last_name
                         ));
 
-                        $group = $groupClass::findOrFail(config('shibboleth.shibboleth_group'));
+                        $group = $groupClass::findOrFail(config('auth.providers.groups.model'));
 
                         $group->users()->save($user);
 
                     } catch (ModelNotFoundException $modelNotFoundException) {
 
                         throw new \RuntimeException("Could not find " . $groupClass
-                            . " with primary key " . config('shibboleth.shibboleth_group')
+                            . " with primary key " . config('auth.providers.groups.model')
                             . "! Check your Laravel-Shibboleth configuration.",
                             900,
                             $modelNotFoundException);
