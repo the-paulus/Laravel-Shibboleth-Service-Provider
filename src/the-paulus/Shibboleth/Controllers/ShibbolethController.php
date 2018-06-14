@@ -178,16 +178,29 @@ class ShibbolethController extends Controller
 
                     try {
 
-                        $user = $userClass::firstOrNew(array(
+                        $user = $userClass::firstOrCreate(array(
                             'email'      => $email,
-                            'auth_type'  => 'shibboleth',
                             'first_name' => $first_name,
                             'last_name'  => $last_name
                         ));
 
-                        $group = $groupClass::findOrFail(config('shibboleth.shibboleth_group'));
+                        $shibboleth_group = config('shibboleth.shibboleth_group', 'Users');
 
-                        $group->users()->save($user);
+                        if(is_int($shibboleth_group)) {
+
+                            $group = $groupClass::findOrFail(intval($shibboleth_group));
+
+                        } else {
+
+                            $group = $groupClass::firstOrFail(['name' => $shibboleth_group]);
+
+                        }
+
+                        if(!$group->hasMember($user)) {
+
+                            $group->users()->save($user);
+
+                        }
 
                     } catch (ModelNotFoundException $modelNotFoundException) {
 
@@ -205,7 +218,7 @@ class ShibbolethController extends Controller
                     }
 
                     // this is simply brings us back to the session-setting branch directly above
-                    if (config('shibboleth.emulate_idp') == true) {
+                    if (env('EMULATE_SHIBBOLETH', config('shibboleth.emulate_idp')) === true) {
 
                         return Redirect::to(action('\\' . __CLASS__ . '@emulateLogin')
                             . '?target=' . action('\\' . __CLASS__ . '@idpAuthorize'));
