@@ -3,23 +3,23 @@ use ThePaulus\Shibboleth\Controllers\ShibbolethController;
 
 Route::group(['middleware' => 'web'], function() {
   // Login Route (Shibboleth)
-  Route::get('login', ShibbolethController::class . '@create');
+  Route::get('login', 'ThePaulus\\Shibboleth\\Controllers\\ShibbolethController@create');
   // Logout Route (Shibboleth and Local)
-  Route::get('logout', ShibbolethController::class . '@destroy');
+  Route::get('logout', 'ThePaulus\\Shibboleth\\Controllers\\ShibbolethController@destroy');
   // Shibboleth IdP Callback
-  Route::get('idp', ShibbolethController::class . '@idpAuthorize');
+  Route::get('idp', 'ThePaulus\\Shibboleth\\Controllers\\ShibbolethController@idpAuthorize');
 
   // Login Route (Local)
-  Route::get('local', ShibbolethController::class . '@localCreate');
+  Route::get('local', 'ThePaulus\\Shibboleth\\Controllers\\ShibbolethController@localCreate');
   // Login Callback (Local)
-  Route::post('local', ShibbolethController::class . '@localAuthorize');
+  Route::post('local', 'ThePaulus\\Shibboleth\\Controllers\\ShibbolethController@localAuthorize');
 
   // Login Callback (Emulated)
-  Route::get('emulated/idp', ShibbolethController::class . '@emulateIdp');
+  Route::get('emulated/idp', 'ThePaulus\\Shibboleth\\Controllers\\ShibbolethController@emulateIdp');
   // Login Callback (Emulated)
-  Route::post('emulated/idp', ShibbolethController::class . '@emulateIdp');
+  Route::post('emulated/idp', 'ThePaulus\\Shibboleth\\Controllers\\ShibbolethController@emulateIdp');
   // Login Route (Emulated)
-  Route::get('emulated/login', ShibbolethController::class . '@emulateLogin');
+  Route::get('emulated/login', 'ThePaulus\\Shibboleth\\Controllers\\ShibbolethController@emulateLogin');
   // Logout Route (Emulated)
-  Route::get('emulated/logout', ShibbolethController::class . '@emulateLogout');
+  Route::get('emulated/logout', 'ThePaulus\\Shibboleth\\Controllers\\ShibbolethController@emulateLogout');
 });
