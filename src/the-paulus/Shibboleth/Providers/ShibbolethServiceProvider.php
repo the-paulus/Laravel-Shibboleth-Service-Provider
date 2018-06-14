@@ -1,4 +1,5 @@
-<?php namespace ThePaulus\Shibboleth\Providers;
+<?php
+namespace ThePaulus\Shibboleth\Providers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
@@ -21,17 +22,18 @@ class ShibbolethServiceProvider extends ServiceProvider
 
         $publishes = [
             __DIR__ . '/../../../config/shibboleth.php'     => config_path('shibboleth.php'),
+            __DIR__ . '/../Controllers/ShibbolethController.php'    => app_path('Http' . DIRECTORY_SEPARATOR . 'Controllers'),
         ];
 
         if(file_exists(app_path('Models'))) {
 
             if(
                 file_exists(app_path('Models') . DIRECTORY_SEPARATOR . 'User.php') ||
-                file_exists(app_path('Models') . DIRECTORY_SEPARATOR . 'Group.php')
+                file_exists(app_path('Models') . DIRECTORY_SEPARATOR . 'UserGroup.php')
             ) {
 
                 $publishes[__DIR__ . '/../Models/User.php'] = app_path('Models') . DIRECTORY_SEPARATOR . 'User.php';
-                $publishes[__DIR__ . '/../Models/Group.php'] = app_path('Models') . DIRECTORY_SEPARATOR . 'Group.php';
+                $publishes[__DIR__ . '/../Models/Group.php'] = app_path('Models') . DIRECTORY_SEPARATOR . 'UserGroup.php';
 
             }
 
@@ -39,11 +41,11 @@ class ShibbolethServiceProvider extends ServiceProvider
 
             if(
                 file_exists(app_path() . DIRECTORY_SEPARATOR . 'User.php') ||
-                file_exists(app_path() . DIRECTORY_SEPARATOR . 'Group.php')
+                file_exists(app_path() . DIRECTORY_SEPARATOR . 'UserGroup.php')
             ) {
 
                 $publishes[__DIR__ . '/../Models/User.php'] = app_path() . DIRECTORY_SEPARATOR . 'User.php';
-                $publishes[__DIR__ . '/../Models/Group.php'] = app_path() . DIRECTORY_SEPARATOR . 'Group.php';
+                $publishes[__DIR__ . '/../Models/Group.php'] = app_path() . DIRECTORY_SEPARATOR . 'UserGroup.php';
 
             }
         }
