@@ -85,6 +85,6 @@ return array(
      */
 
     'add_new_users'            => true, // Should new users be added automatically if they do not exist?
-    'shibboleth_group'         => '1', // What group should the new users be automatically added to?
+    'shibboleth_group'         => 1, // What group should the new users be automatically added to?
 
 );
