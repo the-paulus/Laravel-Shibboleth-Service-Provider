@@ -112,7 +112,7 @@ class ShibbolethController extends Controller
         $userClass  = config('auth.providers.users.model', 'App\\User');
         $groupClass = config('auth.providers.users.group_model', 'App\\Group');
 
-        if (Auth::attempt(array('email' => $email, 'password' => $password, 'type' => 'local'), true)) {
+        if (Auth::attempt(array('email' => $email, 'password' => $password, 'auth_type' => 'local'), true)) {
 
             $user = $userClass::where('email', '=', $email)->first();
 
@@ -147,7 +147,7 @@ class ShibbolethController extends Controller
         // Attempt to login with the email, if success, update the user model
         // with data from the Shibboleth headers (if present)
         // TODO: This can be simplified a lot
-        if (Auth::attempt(array('email' => $email, 'type' => 'shibboleth'), true)) {
+        if (Auth::attempt(array('email' => $email, 'auth_type' => 'shibboleth'), true)) {
             $user = $userClass::where('email', '=', $email)->first();
 
             // Update the model as necessary
@@ -180,7 +180,7 @@ class ShibbolethController extends Controller
 
                         $user = $userClass::create(array(
                             'email'      => $email,
-                            'type'       => 'shibboleth',
+                            'auth_type'  => 'shibboleth',
                             'first_name' => $first_name,
                             'last_name'  => $last_name,
                             'enabled'    => 0,
