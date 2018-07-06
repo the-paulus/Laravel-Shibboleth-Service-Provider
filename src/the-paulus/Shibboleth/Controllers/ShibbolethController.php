@@ -179,15 +179,25 @@ class ShibbolethController extends Controller
 
                     try {
 
-                        $user = $userClass::firstOrCreate(array(
-                            'email'      => $email,
-                            'first_name' => $first_name,
-                            'last_name'  => $last_name
-                        ));
+                        /* Tried using the following statement but received 'Wrong parameters for RuntimeException'
+                         * $userClass::firstOrCreate([
+                         *  'email' => $email,
+                         *  'first_name' => $first_name,
+                         *  'last_name' => $last_name
+                         * ]);
+                         */
+                        $user = $userClass::where('email', $email)->first();
+
+                        if(!$user) {
+                          $user = new $userClass;
+                          $user->email = $email;
+                          $user->first_name = $first_name;
+                          $user->last_name = $last_name;
+                        }
 
                         $shibboleth_group = config('shibboleth.shibboleth_group', 'UserGroup');
 
-                        if(is_int($shibboleth_group)) {
+                        if(is_int(intval($shibboleth_group))) {
 
                             $group = $groupClass::findOrFail(intval($shibboleth_group));
 
