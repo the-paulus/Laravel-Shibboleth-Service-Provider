@@ -64,7 +64,7 @@ class ShibbolethController extends Controller
         if (env('EMULATE_SHIBBOLETH', config('shibboleth.emulate_idp')) === TRUE) {
 
             return Redirect::to(action('\\' . __CLASS__ . '@emulateLogin')
-                . '?target=' . action('\\' . __CLASS__ . "@idpAuthorize"));
+                . '?target=' . action('\\' . __CLASS__ . "@emulateIdp"));
 
         } else {
 
@@ -142,12 +142,13 @@ class ShibbolethController extends Controller
         $first_name = $this->getServerVariable(config('shibboleth.idp_login_first'));
         $last_name  = $this->getServerVariable(config('shibboleth.idp_login_last'));
         $userClass  = config('auth.providers.users.model', 'App\\User');
-        $groupClass = config('auth.providers.groups.model', 'App\\Group');
+        $groupClass = config('auth.providers.groups.model', 'App\\UserGroup');
 
         // Attempt to login with the email, if success, update the user model
         // with data from the Shibboleth headers (if present)
         // TODO: This can be simplified a lot
         if (Auth::attempt(array('email' => $email, 'auth_type' => 'shibboleth'), true)) {
+
             $user = $userClass::where('email', '=', $email)->first();
 
             // Update the model as necessary
@@ -174,7 +175,7 @@ class ShibbolethController extends Controller
             //Add user to group and send through auth.
             if (isset($email)) {
 
-                if (config('shibboleth.add_new_users', true)) {
+                if (config('shibboleth.add_new_users', false)) {
 
                     try {
 
@@ -184,7 +185,7 @@ class ShibbolethController extends Controller
                             'last_name'  => $last_name
                         ));
 
-                        $shibboleth_group = config('shibboleth.shibboleth_group', 'Users');
+                        $shibboleth_group = config('shibboleth.shibboleth_group', 'UserGroup');
 
                         if(is_int($shibboleth_group)) {
 
@@ -221,7 +222,7 @@ class ShibbolethController extends Controller
                     if (env('EMULATE_SHIBBOLETH', config('shibboleth.emulate_idp')) === true) {
 
                         return Redirect::to(action('\\' . __CLASS__ . '@emulateLogin')
-                            . '?target=' . action('\\' . __CLASS__ . '@idpAuthorize'));
+                            . '?target=' . action('\\' . __CLASS__ . '@emulateIdp'));
 
                     } else {
 
