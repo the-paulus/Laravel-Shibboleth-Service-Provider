@@ -175,41 +175,27 @@ class ShibbolethController extends Controller
             //Add user to group and send through auth.
             if (isset($email)) {
 
-                if (config('shibboleth.add_new_users', false)) {
+                if (config('shibboleth.add_new_users', true)) {
 
                     try {
 
-                        /* Tried using the following statement but received 'Wrong parameters for RuntimeException'
-                         * $userClass::firstOrCreate([
-                         *  'email' => $email,
-                         *  'first_name' => $first_name,
-                         *  'last_name' => $last_name
-                         * ]);
-                         */
-                        $user = $userClass::where('email', $email)->first();
+                        $shibboleth_group = config('shibboleth.shibboleth_group', 'User');
 
-                        if(!$user) {
-                          $user = new $userClass;
-                          $user->email = $email;
-                          $user->first_name = $first_name;
-                          $user->last_name = $last_name;
-                        }
-
-                        $shibboleth_group = config('shibboleth.shibboleth_group', 'UserGroup');
-
-                        if(is_int(intval($shibboleth_group))) {
+                        if(is_int($shibboleth_group)) {
 
                             $group = $groupClass::findOrFail(intval($shibboleth_group));
 
                         } else {
 
-                            $group = $groupClass::firstOrFail(['name' => $shibboleth_group]);
+                            $group = $groupClass::where('name', $shibboleth_group)->firstOrFail();
 
                         }
 
-                        if(!$group->hasMember($user)) {
+                        $user = $userClass::firstOrCreate(['email' => $email], ['first_name' => $first_name, 'last_name' => $last_name, 'auth_type' => 'shibboleth' ]);
 
-                            $group->users()->save($user);
+                        if(!$user->memberOf($group)) {
+
+                          $user->groups()->attach($group->id);
 
                         }
 
