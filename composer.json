@@ -1,7 +1,7 @@
 {
   "name": "the-paulus/laravel-shibboleth",
   "description": "Enable basic Shibboleth support for Laravel 5.5+. (Forked from StudentAffairsUWM/Laravel-Shibboleth-Service-Provider)",
-  "version": "1.2.18",
+  "version": "1.2.19",
   "authors": [
     {
       "name": "Paul Lyon",

@@ -50,16 +50,15 @@ class ShibbolethUserProvider implements UserProvider
         }
 
         $class = get_class($this->model);
-        $user  = new $class;
+        $user  = ($class)::all();
 
-        $query = $user->newQuery();
         foreach ($credentials as $key => $value) {
             if (!str_contains($key, 'password')) {
-                $query->where($key, $value);
+                $user->where($key, $value);
             }
         }
 
-        return $query->first();
+        return $user->first();
     }
 
     /**
@@ -73,7 +72,7 @@ class ShibbolethUserProvider implements UserProvider
     {
         $auth_type = \DB::table('auth_types')->where('name', '=', 'shibboleth')->value('id');
 
-        return ($user->auth_type === $auth_type)
+        return ($user->auth_type === $creds['auth_type'])
             ? true : Hash::check($creds['password'], $user->getAuthPassword());
     }
 
