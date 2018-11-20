@@ -4,8 +4,8 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
 use Hash;
 
-class ShibbolethUserProvider implements UserProvider
-{
+class ShibbolethUserProvider implements UserProvider {
+
     /**
      * The user model.
      *
@@ -19,9 +19,10 @@ class ShibbolethUserProvider implements UserProvider
      * @param  string  $model
      * @return void
      */
-    public function __construct($model)
-    {
+    public function __construct($model) {
+
         $this->model  = $model;
+
     }
 
     /**
@@ -30,11 +31,13 @@ class ShibbolethUserProvider implements UserProvider
      * @param  mixed $identifier
      * @return \Illuminate\Auth\Authenticatable | null
      */
-    public function retrieveById($identifier)
-    {
+    public function retrieveById($identifier) {
+
         $user = $this->retrieveByCredentials(['id' => $identifier]);
+
         return ($user && $user->getAuthIdentifier() == $identifier) ?
             $user : null;
+
     }
 
     /**
@@ -43,22 +46,19 @@ class ShibbolethUserProvider implements UserProvider
      * @param  array $credentials
      * @return Illuminate\Auth\Authenticatable | null
      */
-    public function retrieveByCredentials(array $credentials)
-    {
+    public function retrieveByCredentials(array $credentials) {
+
         if (count($credentials) == 0) {
+
             return null;
+
         }
 
         $class = get_class($this->model);
-        $user  = ($class)::all();
+        $user = new $class;
 
-        foreach ($credentials as $key => $value) {
-            if (!str_contains($key, 'password')) {
-                $user->where($key, $value);
-            }
-        }
+        return $user->where($credentials, '=')->first();
 
-        return $user->first();
     }
 
     /**
@@ -68,12 +68,13 @@ class ShibbolethUserProvider implements UserProvider
      * @param  array $credentials
      * @return bool
      */
-    public function validateCredentials(Authenticatable $user, array $creds)
-    {
+    public function validateCredentials(Authenticatable $user, array $creds) {
+
         $auth_type = \DB::table('auth_types')->where('name', '=', 'shibboleth')->value('id');
 
         return ($user->auth_type === $creds['auth_type'])
             ? true : Hash::check($creds['password'], $user->getAuthPassword());
+
     }
 
     /**
@@ -83,9 +84,10 @@ class ShibbolethUserProvider implements UserProvider
      * @param  string  $token
      * @return void
      */
-    public function updateRememberToken(Authenticatable $user, $token)
-    {
+    public function updateRememberToken(Authenticatable $user, $token) {
+
         // Not Implemented
+
     }
 
     /**
@@ -95,8 +97,10 @@ class ShibbolethUserProvider implements UserProvider
      * @param  string  $token
      * @return \Illuminate\Auth\Authenticatable | null
      */
-    public function retrieveByToken($identifier, $token)
-    {
+    public function retrieveByToken($identifier, $token) {
+
         // Not Implemented
+
     }
+    
 }

@@ -143,11 +143,12 @@ class ShibbolethController extends Controller
         $last_name  = $this->getServerVariable(config('shibboleth.idp_login_last'));
         $userClass  = config('auth.providers.users.model', 'App\\User');
         $groupClass = config('auth.providers.groups.model', 'App\\UserGroup');
+        $auth_type = \DB::table('auth_types')->where('name', '=', 'shibboleth')->get(['id'])->first()->id;
 
         // Attempt to login with the email, if success, update the user model
         // with data from the Shibboleth headers (if present)
         // TODO: This can be simplified a lot
-        if (Auth::attempt(array('email' => $email, 'auth_type' => 'shibboleth'), true)) {
+        if (Auth::attempt(array('email' => $email, 'auth_type' => $auth_type), true)) {
 
             $user = $userClass::where('email', '=', $email)->first();
 
