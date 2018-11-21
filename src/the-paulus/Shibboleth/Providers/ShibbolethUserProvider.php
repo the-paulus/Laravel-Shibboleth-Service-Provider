@@ -70,9 +70,9 @@ class ShibbolethUserProvider implements UserProvider {
      */
     public function validateCredentials(Authenticatable $user, array $creds) {
 
-        $auth_type = \DB::table('auth_types')->where('name', '=', 'shibboleth')->value('id');
+      $auth_type = \DB::table('auth_types')->where('id', '=', $creds['auth_type'])->value('name');
 
-        return ($user->auth_type === $creds['auth_type'])
+      return ($user->auth_type === $auth_type)
             ? true : Hash::check($creds['password'], $user->getAuthPassword());
 
     }
@@ -102,5 +102,5 @@ class ShibbolethUserProvider implements UserProvider {
         // Not Implemented
 
     }
-    
+
 }
