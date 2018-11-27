@@ -111,8 +111,9 @@ class ShibbolethController extends Controller
         $password = Input::get(config('shibboleth.local_login_pass_field'));
         $userClass  = config('auth.providers.users.model', 'App\\User');
         $groupClass = config('auth.providers.groups.model', 'App\\Group');
+        $auth_type = \DB::table('auth_types')->where('name', '=', 'shibboleth')->get(['id'])->first()->id;
 
-        if (Auth::attempt(array('email' => $email, 'password' => $password, 'auth_type' => 'local'), true)) {
+        if (Auth::attempt(array('email' => $email, 'password' => $password, 'auth_type' => $auth_type), true)) {
 
             $user = $userClass::where('email', '=', $email)->first();
 
@@ -169,7 +170,7 @@ class ShibbolethController extends Controller
                 $this->tokenizeDestination(
                     config('shibboleth.shibboleth_authenticated'),
                     $user,
-                    ['auth_type' => 'idp']
+                    ['auth_type' => 'shibboleth']
                 ));
 
         } else {
@@ -258,7 +259,7 @@ class ShibbolethController extends Controller
 
         }
 
-        if($auth_type == 'idp') {
+        if($auth_type == 'shibboleth') {
 
             if (config('shibboleth.emulate_idp') == true) {
 
