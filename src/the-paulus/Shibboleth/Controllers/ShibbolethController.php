@@ -263,7 +263,7 @@ class ShibbolethController extends Controller
 
             if (config('shibboleth.emulate_idp') == true) {
 
-                return Redirect::to(action(__CLASS__ . '@emulateLogout'));
+                return Redirect::to(action('\\' . __CLASS__ . '@emulateLogout'));
 
             } else {
 
