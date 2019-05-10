@@ -5,7 +5,7 @@ Route::group(['middleware' => 'web'], function() {
   // Login Route (Shibboleth)
   Route::get('login', 'ThePaulus\\Shibboleth\\Controllers\\ShibbolethController@create');
   // Logout Route (Shibboleth and Local)
-  Route::get('logout', 'ThePaulus\\Shibboleth\\Controllers\\ShibbolethController@destroy');
+  Route::match(['get','post'], 'logout', 'ThePaulus\\Shibboleth\\Controllers\\ShibbolethController@destroy');
   // Shibboleth IdP Callback
   Route::get('idp', 'ThePaulus\\Shibboleth\\Controllers\\ShibbolethController@idpAuthorize');
 
